@@ -32,12 +32,15 @@ import javax.inject.Inject
  * A 'Trampoline' activity for sending users to an appropriate screen on launch.
  */
 class LauncherActivity : DaggerAppCompatActivity() {
-
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    //Koltin中属性在声明的同时也要求要被初始化，否则会报错
+    //可是有的时候，我并不想声明一个类型可空的对象，而且我也没办法在对象一声明的时候就为它初始化，
+    // 那么这时就需要用到Kotlin提供的延迟初始化。
+    //lateinit var的作用也比较简单，就是让编译期在检查时不要因为属性变量未被初始化而报错
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val viewModel: LaunchViewModel = viewModelProvider(viewModelFactory)
         viewModel.launchDestination.observe(this, EventObserver { destination ->
             when (destination) {
